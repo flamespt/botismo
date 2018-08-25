@@ -1,4 +1,4 @@
-import random, time, requests
+import random, time, requests, threading
 from selenium import webdriver
 from selenium.webdriver.common.proxy import *
 from bs4 import BeautifulSoup
@@ -22,9 +22,8 @@ def proxies():
             address.append((row.contents[0].contents[0] + ':' +row.contents[1].contents[0]))
     return random.choice(address)
 
-if __name__ == "__main__":
 
-
+def drivers():
     while (True):
         # proxies()
 
@@ -51,15 +50,28 @@ if __name__ == "__main__":
         profile.set_preference('network.proxy.ssl', proxy_ip)
         profile.set_preference('network.proxy.socks', proxy_ip)
         profile.set_preference('network.proxy.socks_port', int(proxy_port))
-
+        profile.update_preferences()
         driver = webdriver.Firefox(firefox_profile=profile, proxy=proxy)
-        driver.get('https://www.ipchicken.com/')
-        sair = input("Deseja sair?")
-        if sair == 'sim':
+
+        try:
+            driver.get('https://www.youtube.com/watch?v=VvbhHYQqU1c')
+            time.sleep(random.randint(60,120))
             driver.quit()
-            break
-        else:
+            break;
+        except:
             driver.quit()
+        # sair = input("Deseja sair?")
+        # if sair == 'sim':
+        #     driver.quit()
+        #     break
+        # else:
+        #     driver.quit()
+
+if __name__ == "__main__":
+    for i in range(3):
+        t = threading.Thread(target=drivers)
+        t.start()
+
 
     #for i in range(2):
 
